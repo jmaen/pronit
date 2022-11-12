@@ -6,6 +6,9 @@ import sys
 from .gitignores import gitignores as gi
 
 BOLD = "\033[1m"
+UNDERLINE = "\033[4m" 
+RED = "\033[31;1m"
+GREEN = "\033[32;1m"
 END = "\033[0m"
 
 
@@ -17,17 +20,24 @@ class Pronit:
 
     def __init__(self):
         self.load_token()
-        if self.token:
-            self.get_username()
-            name_check = input(f"Is your GitHub username {BOLD}{self.username}{END}? (y/n)\n{BOLD}>{END} ")
-            if name_check not in ["y", "yes"]:
-                self.input_token()
-        else:
+        if not self.token:
+            self.input_token()
+            return
+
+        if not self.get_username():
+            self.input_token()
+            return
+        
+        name_check = input(f"You are registered as {BOLD}{self.username}{END}. "
+                            "If that's not you or you want to change your access token "
+                            f"enter {BOLD}n{END}, otherwise continue with {BOLD}y{END}\n{BOLD}>{END} ")
+        if name_check not in ["y", "yes"]:
             self.input_token()
 
     def input_token(self):
         self.token = input(f"Please enter your GitHub access token\n{BOLD}>{END} ")
-        self.get_username()
+        while not self.get_username():
+            self.token = input(f"That token is invalid. Please enter your GitHub access token\n{BOLD}>{END} ")
 
         # save token in user directory
         pronit_directory = f"{os.path.expanduser('~')}/.pronit"
@@ -49,14 +59,21 @@ class Pronit:
 
     def get_username(self):
         authorization = {"Authorization": f"Bearer {self.token}"}
-        user = requests.get("https://api.github.com/user", headers=authorization).json()
-        self.username = user['login']
+        response = requests.get("https://api.github.com/user", headers=authorization)
+        if response.status_code == 200:
+            self.username = response.json()['login']
+            return True
+        else:
+            return False
 
     def create_project(self, name, description="", private=False):
         self.name = name
 
         # create project directory
         self.project_directory = f"{os.getcwd()}/{name}"
+        if os.path.isdir(self.project_directory):
+            print(f"{RED}This project already exists{END}")
+            exit()
         os.mkdir(self.project_directory)
         os.chdir(self.project_directory)
         with open("README.md", "w+") as f:
@@ -70,7 +87,12 @@ class Pronit:
             "description": description,
             "private": private
         }
-        requests.post("https://api.github.com/user/repos", headers=authorization, json=data)
+        response = requests.post("https://api.github.com/user/repos", headers=authorization, json=data)
+        if response.status_code == 201:
+            print(f"{GREEN}Github repository has been created{END}")
+        else:
+            print(f"{RED}Failed to create GitHub repository{END}")
+            exit()
 
         # git init
         subprocess.run(["git", "init", "-q"])
@@ -98,8 +120,8 @@ class Pronit:
         subprocess.run(["git", "commit", "-m", message, "-q"])
         subprocess.run(["git", "push", "-u", "origin", "master", "-q"])
 
-        print(f"{BOLD}{self.name}{END} has been successfully initialized. "
-              f"It is now live on https://github.com/{self.username}/{self.name}")
+        print(f"{GREEN}{BOLD}{self.name}{END}{GREEN} has been successfully initialized. "
+              f"It is now live on {UNDERLINE}https://github.com/{self.username}/{self.name}{END}")
 
 
 def main():
@@ -117,8 +139,8 @@ def main():
 
         # add .gitignores
         gitignore_keys = \
-            input("Please enter comma separated the names of all languages or environments "
-                  f"you want to include .gitignores for\n{BOLD}>{END} ")
+            input("Please enter the names of all languages or platforms "
+                  f"you want to apply to the .gitignore (comma separated)\n{BOLD}>{END} ")
         gitignore_keys = gitignore_keys.replace(" ", "").split(",")
         pronit.add_gitignores(gitignore_keys)
 
@@ -151,21 +173,21 @@ def main():
 
         # add .gitignores
         gitignore_keys = \
-            input("Please enter comma separated the names of all languages or environments "
-                  f"you want to include .gitignores for\n{BOLD}>{END} ")
+            input("Please enter the names of all languages or platforms "
+                  f"you want to apply to the .gitignore (comma separated)\n{BOLD}>{END} ")
         gitignore_keys = gitignore_keys.replace(" ", "").split(",")
         pronit.add_gitignores(gitignore_keys)
 
         # add license
         license_index = input("Please enter a number corresponding to your license of choice: "
-                              "[0 - MIT, 1 - Apache 2.0, 2 - GNU GPLv3, 3 - None].\n"
-                              f"For help choosing a license see https://choosealicense.com\n{BOLD}>{END} ")
+                              "[0 - MIT, 1 - Apache 2.0, 2 - GNU GPLv3, 3 - None]. "
+                              f"For help choosing a license see {UNDERLINE}https://choosealicense.com{END}\n{BOLD}>{END} ")
         pronit.add_license(int(license_index))
 
         # enter commit message
         message_check = \
             input("Do you want to use a randomly selected commit message "
-                  f"generated by https://whatthecommit.com? (y/n)\n{BOLD}>{END} ")
+                  f"generated by {UNDERLINE}https://whatthecommit.com{END}? (y/n)\n{BOLD}>{END} ")
         if message_check in ["y", "yes"]:
             commit_message = requests.get("https://whatthecommit.com/index.txt").text
         else:
@@ -177,4 +199,4 @@ def main():
         else:
             pronit.finish()
     else:
-        print("usage: pronit [-m | --minimal] [-e | --extended]")
+        print("Usage: pronit [-m | --minimal] [-e | --extended]")
