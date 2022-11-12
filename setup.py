@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name="pronit",
+    name="Pronit",
     description="A tool that automates project initialization",
     version="1.0",
     author="Jannik Mänzer",

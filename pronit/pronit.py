@@ -113,10 +113,7 @@ def main():
             project_name = input(f"Project name can not be empty. Please enter the project name\n{BOLD}>{END} ")
         project_description = input(f"Please enter a project description\n{BOLD}>{END} ")
         private_check = input(f"Should the project be private? (y/n)\n{BOLD}>{END} ")
-        if private_check in ["y", "yes"]:
-            pronit.create_project(project_name, description=project_description, private=True)
-        else:
-            pronit.create_project(project_name, description=project_description)
+        pronit.create_project(project_name, description=project_description, private=private_check in ["y", "yes"])
 
         # add .gitignores
         gitignore_keys = \
@@ -126,11 +123,7 @@ def main():
         pronit.add_gitignores(gitignore_keys)
 
         # commit and push
-        commit_message = input(f"Please enter a commit message\n{BOLD}>{END} ")
-        if commit_message:
-            pronit.finish(commit_message)
-        else:
-            pronit.finish()
+        pronit.finish()
     elif sys.argv[1] in ["-m", "--minimal"]:
         # get access token
         pronit = Pronit()
@@ -139,11 +132,12 @@ def main():
         project_name = input(f"Please enter the project name\n{BOLD}>{END} ")
         while not project_name:
             project_name = input(f"Project name can not be empty. Please enter the project name\n{BOLD}>{END} ")
-        pronit.create_project(project_name)
+        private_check = input(f"Should the project be private? (y/n)\n{BOLD}>{END} ")
+        pronit.create_project(project_name, private=private_check in ["y", "yes"])
 
         # commit and push
         pronit.finish()
-    elif sys.argv[1] in ["-a", "--advanced"]:
+    elif sys.argv[1] in ["-e", "--extended"]:
         # get access token
         pronit = Pronit()
 
@@ -153,10 +147,7 @@ def main():
             project_name = input(f"Project name can not be empty. Please enter the project name\n{BOLD}>{END} ")
         project_description = input(f"Please enter a project description\n{BOLD}>{END} ")
         private_check = input(f"Should the project be private? (y/n)\n{BOLD}>{END} ")
-        if private_check in ["y", "yes"]:
-            pronit.create_project(project_name, description=project_description, private=True)
-        else:
-            pronit.create_project(project_name, description=project_description)
+        pronit.create_project(project_name, description=project_description, private=private_check in ["y", "yes"])
 
         # add .gitignores
         gitignore_keys = \
@@ -186,4 +177,4 @@ def main():
         else:
             pronit.finish()
     else:
-        print("usage: pronit [-m | --minimal] [-a | --advanced]")
+        print("usage: pronit [-m | --minimal] [-e | --extended]")
