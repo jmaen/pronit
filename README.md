@@ -1,2 +1,2 @@
 # pronit
-A tool that automates project initialization.
+Pronit (**pro**ject i**nit**) is a tool that helps you speed up your development process by automating the initialization of new projects.
