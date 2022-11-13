@@ -6,13 +6,13 @@ It will:
 - create a GitHub repository using the GitHub API
 - add a `README.md` file with the project name and description
 - add `.gitignore` templates for languages / environments you use
-- add a `LICENSE` of you choice
+- add a `LICENSE` of your choice
 - commit and push files with a custom commit message
 
 ## Installing
 1. Install Python 3.7 (or newer)
 2. Install Git 2.33 (or newer)
-3. You might need to install [pipx](https://github.com/pypa/pipx#install-pipx)
+3. Install [pipx](https://github.com/pypa/pipx#install-pipx)
 4. Install Pronit
 ```
 git clone https://github.com/jmaen/pronit
