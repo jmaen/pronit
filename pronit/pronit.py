@@ -66,24 +66,24 @@ class Pronit:
         else:
             return False
 
-    def create_project(self, name, description="", private=False):
-        self.name = name
+    def create_project(self, name: str, description="", private=False):
+        self.name = "".join(name.split())
 
         # create project directory
-        self.project_directory = f"{os.getcwd()}/{name}"
+        self.project_directory = f"{os.getcwd()}/{self.name}"
         if os.path.isdir(self.project_directory):
             print(f"{RED}This project already exists{END}")
             exit()
         os.mkdir(self.project_directory)
         os.chdir(self.project_directory)
         with open("README.md", "w+") as f:
-            f.write(f"# {name}\n")
+            f.write(f"# {self.name}\n")
             f.write(description)
 
         # create GitHub repository
         authorization = {"Authorization": f"Bearer {self.token}"}
         data = {
-            "name": name,
+            "name": self.name,
             "description": description,
             "private": private
         }
@@ -98,7 +98,7 @@ class Pronit:
         result = subprocess.run("git init -q".split())
         self.check_result(result, "Failed to initialize local repository")
 
-        result = subprocess.run(f"git remote add origin https://github.com/{self.username}/{name}.git".split())
+        result = subprocess.run(f"git remote add origin https://github.com/{self.username}/{self.name}.git".split())
         self.check_result(result, "Failed to add remote")
 
     @staticmethod
@@ -125,7 +125,7 @@ class Pronit:
         result = subprocess.run("git add .".split())
         self.check_result(result, "Failed to add files")
 
-        result = subprocess.run(f"git commit -m {message} -q".split())
+        result = subprocess.run(["git", "commit", "-m", message, "-q"])
         self.check_result(result, "Failed to commit files")
 
         result = subprocess.run("git config --get init.defaultBranch".split(), capture_output=True, text=True)
@@ -146,7 +146,6 @@ class Pronit:
 
 def main():
     if len(sys.argv) < 2:
-        # get access token
         pronit = Pronit()
 
         # create project
@@ -167,7 +166,6 @@ def main():
         # commit and push
         pronit.finish()
     elif sys.argv[1] in ["-m", "--minimal"]:
-        # get access token
         pronit = Pronit()
 
         # create project
@@ -180,7 +178,6 @@ def main():
         # commit and push
         pronit.finish()
     elif sys.argv[1] in ["-e", "--extended"]:
-        # get access token
         pronit = Pronit()
 
         # create project
