@@ -1,11 +1,11 @@
 # Pronit
 Pronit (**pro**ject i**nit**) is a tool that helps you speed up your development process by automating the initialization of new projects.
 
-It will:
+Pronit will:
 - create a local repository
 - create a GitHub repository using the GitHub API
 - add a `README.md` file with the project name and description
-- add `.gitignore` templates for languages / environments you use
+- add `.gitignore` templates for languages or platforms you use
 - add a `LICENSE` of your choice
 - commit and push files with a custom commit message
 
