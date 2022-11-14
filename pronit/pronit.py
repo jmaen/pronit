@@ -132,7 +132,7 @@ class Pronit:
         self.check_result(result, "Failed to get default branch from config")
 
         result = subprocess.run(f"git push -u origin {result.stdout} -q".split())
-        self.check_result(result, "Failed to push files")
+        self.check_result(result, "Failed to push files to remote")
 
         print(f"{GREEN}{BOLD}{self.name}{END}{GREEN} has been successfully initialized. "
               f"It is now live on {UNDERLINE}https://github.com/{self.username}/{self.name}{END}")
@@ -140,6 +140,7 @@ class Pronit:
     @staticmethod
     def check_result(result, message):
         if result.returncode != 0:
+            print(result.stderr)
             print(f"{RED}{message}{END}")
             exit()
 
