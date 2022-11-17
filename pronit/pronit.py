@@ -107,7 +107,7 @@ def initialize_project(name, username, message):
     check_result(result, "Failed to add remote")
 
     # add, commit and push files
-    result = subprocess.run("git add".split())
+    result = subprocess.run("git add .".split())
     check_result(result, "Failed to add files")
     result = subprocess.run(["git", "commit", "-m", message, "-q"])
     check_result(result, "Failed to commit files")
@@ -118,7 +118,7 @@ def initialize_project(name, username, message):
 
     print(f"{FORMAT['success']}{FORMAT['highlight']}{name}{FORMAT['end']}{FORMAT['success']} "
           "has been successfully initialized. "
-          f"It is now live on {FORMAT['link']}https://github.com/{username}/{name}{FORMAT['end']}")
+          f"It is now live on {FORMAT['url']}https://github.com/{username}/{name}{FORMAT['end']}")
 
 
 def check_result(result, message):
@@ -140,14 +140,12 @@ def main():
 
     # get GitHub access token
     token = load_token()
-    username = None
     if not token:
         token = input(f"Please enter your GitHub access token\n{FORMAT['highlight']}>{FORMAT['end']} ")
-        username = check_user(token)
-        while not username:
+        while not check_user(token):
             token = input(f"That token is invalid. Please enter your GitHub access token\n{FORMAT['highlight']}>{FORMAT['end']} ")
-            username = check_user(token)
-    
+    username = check_user(token)
+
     # confirm token
     token_check = input(f"You are registered as {FORMAT['highlight']}{username}{FORMAT['end']}. "
                         f"Do you want to change your GitHub access token? (y/n)\n{FORMAT['highlight']}>{FORMAT['end']} ")
@@ -183,7 +181,7 @@ def main():
     if mode == Mode.EXTENDED:
         index = input("Please enter a number corresponding to your license of choice: "
                             "[0 - MIT, 1 - Apache 2.0, 2 - GNU GPLv3, 3 - None]. "
-                            f"For help choosing a license see {FORMAT['link']}https://choosealicense.com{FORMAT['end']}"
+                            f"For help choosing a license see {FORMAT['url']}https://choosealicense.com{FORMAT['end']}"
                             f"\n{FORMAT['highlight']}>{FORMAT['end']} ")
         add_license(int(index))
 
