@@ -129,7 +129,7 @@ def check_result(result, message):
 
 def main():
     mode = Mode.DEFAULT
-    if len(sys.argv > 1):
+    if len(sys.argv) > 1:
         if sys.argv[1] in ["-m", "--minimal"]:
             mode = Mode.MINIMAL
         elif sys.argv[1] in ["-e", "--extended"]:
