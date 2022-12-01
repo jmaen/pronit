@@ -1,8 +1,8 @@
+import argparse
 from enum import Enum
 import os
 import requests
 import subprocess
-import sys
 
 from .gitignores import gitignores as gi
 
@@ -121,6 +121,11 @@ def initialize_project(name, username, message):
           f"It is now live on {FORMAT['url']}https://github.com/{username}/{name}{FORMAT['end']}")
 
 
+def open_project():
+    result = subprocess.run("code .".split(), shell=True)
+    check_result(result, "Failed to open project with Visual Studio Code. Is it correctly installed?")
+
+
 def check_result(result, message):
     if result.returncode != 0:
         print(f"{FORMAT['error']}{message}{FORMAT['end']}")
@@ -128,15 +133,23 @@ def check_result(result, message):
 
 
 def main():
+    # parse arguments
+    parser = argparse.ArgumentParser(
+        prog="pronit",
+        description="A tool that automates project initialization"
+    )
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument("-m", "--minimal", action="store_true", help="run Pronit in minimal mode")
+    mode_group.add_argument("-e", "--extended", action="store_true", help="run Pronit in extended mode")
+    parser.add_argument("-c", "--code", action="store_true", help="open the project in Visual Studio Code")
+    args = vars(parser.parse_args())
+
+    # set mode
     mode = Mode.DEFAULT
-    if len(sys.argv) > 1:
-        if sys.argv[1] in ["-m", "--minimal"]:
-            mode = Mode.MINIMAL
-        elif sys.argv[1] in ["-e", "--extended"]:
-            mode = Mode.EXTENDED
-        else:
-            print("Usage: pronit [-m | --minimal] [-e | --extended]")
-            exit()
+    if args['minimal']:
+        mode = Mode.MINIMAL
+    elif args['extended']:
+        mode = Mode.EXTENDED
 
     # get GitHub access token
     token = load_token()
@@ -173,7 +186,7 @@ def main():
     if mode != Mode.MINIMAL:
         keys = \
         input("Please enter the names of all languages or platforms "
-              f"you want to apply to thegitignore (comma separated)\n{FORMAT['highlight']}>{FORMAT['end']} ")
+              f"you want to apply to the .gitignore (comma separated)\n{FORMAT['highlight']}>{FORMAT['end']} ")
         keys = keys.replace(" ", "").split(",")
         add_gitignores(keys)
 
@@ -190,3 +203,7 @@ def main():
     if mode == Mode.EXTENDED:
         message = input(f"Please enter a commit message\n{FORMAT['highlight']}>{FORMAT['end']} ")
     initialize_project(name, username, message)
+
+    # open Visual Studio Code
+    if args['code']:
+        open_project()

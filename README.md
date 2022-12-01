@@ -8,6 +8,7 @@ Pronit will:
 - add `.gitignore` templates for languages or platforms you use
 - add a `LICENSE` of your choice
 - commit and push files with a custom commit message
+- open the project in Visual Studio Code
 
 ## Installing
 1. Install Python 3.7 (or newer)
@@ -22,11 +23,15 @@ pipx install .
 
 ## Usage
 ```
-pronit [-m | --minimal] [-e | --extended]
+pronit [-h] [-m | -e] [-c]
 ```
 
 - Without any options, Pronit will ask for name, description, visibility and languages / environments to include in the `.gitignore`.
-- `--minimal`:
+- `-h, --help`:
+Display usage info.
+- `-m, --minimal`:
 The bare minimum to get your project up and running as fast as possible. Only asks for name and visibility.
-- `--extended`:
+- `-e, --extended`:
 Includes everything from the default option, plus selection of a license and custom commit message.
+- `-c, --code`:
+Open the project in Visual Studio Code.
