@@ -1,4 +1,7 @@
 # Pronit
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jmaen/pronit/blob/master/LICENSE)
+[![code style: black](https://img.shields.io/badge/code%20style-black-black.svg)](https://github.com/psf/black)
+
 Pronit (**pro**ject i**nit**) is a tool that helps you speed up your development process by automating the initialization of new projects.
 
 Pronit will:
