@@ -88,8 +88,8 @@ def add_gitignores(keys):
 
 
 def add_license(index):
-    if 0 <= index <= 2:
-        licenses = ["mit", "apache-2.0", "gpl-3.0"]
+    if 0 <= index <= 4:
+        licenses = ["mit", "apache-2.0", "gpl-3.0", "bsd-3-clause", "unlicense"]
         response = requests.get(f"https://api.github.com/licenses/{licenses[index]}")
         if response.status_code == 200:
             license_text = response.json()["body"]
@@ -230,11 +230,12 @@ def main():
     if mode == Mode.EXTENDED:
         index = input(
             "Please enter a number corresponding to your license of choice: "
-            "[0 - MIT, 1 - Apache 2.0, 2 - GNU GPLv3, 3 - None]. "
+            "[0 - MIT, 1 - Apache 2.0, 2 - GNU GPLv3, 3 - BSD 3-Clause, 4 - Unlicense]. "
             f"For help choosing a license see {FORMAT['url']}https://choosealicense.com{FORMAT['end']}"
             f"\n{FORMAT['highlight']}>{FORMAT['end']} "
         )
-        add_license(int(index))
+        if index in ["0", "1", "2", "3", "4"]:
+            add_license(int(index))
 
     # initialize project
     message = None
