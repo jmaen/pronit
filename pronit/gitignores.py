@@ -199,4 +199,6 @@ gitignores = {
     "zephir": "Zephir.gitignore",
 }
 
-gitignores = {key: value for keys, value in gitignores.items() for key in keys.split(",")}
+gitignores = {
+    key: value for keys, value in gitignores.items() for key in keys.split(",")
+}
