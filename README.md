@@ -13,6 +13,8 @@ Pronit will:
 - commit and push files with a custom commit message
 - open the project in Visual Studio Code
 
+![Demo](demo.png)
+
 ## Installing
 1. Install Python 3.7 (or newer)
 2. Install Git 2.33 (or newer)
