@@ -9,7 +9,5 @@ setup(
     install_requires=["requests", "prompt_toolkit"],
     packages=["pronit"],
     include_package_data=True,
-    entry_points={
-        "console_scripts": ["pronit=pronit.pronit:main"]
-    }
+    entry_points={"console_scripts": ["pronit=pronit.pronit:main"]},
 )

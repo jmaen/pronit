@@ -14,12 +14,14 @@ class Mode(Enum):
     DEFAULT, MINIMAL, EXTENDED = range(3)
 
 
-STYLE = Style.from_dict({
-    "highlight": "bold",
-    "success": "ansigreen bold",
-    "error": "ansired bold",
-    "url": "underline"
-})
+STYLE = Style.from_dict(
+    {
+        "highlight": "bold",
+        "success": "ansigreen bold",
+        "error": "ansired bold",
+        "url": "underline",
+    }
+)
 INPUT = "<highlight>></highlight>"
 
 
@@ -72,7 +74,9 @@ def create_project(token, name, description, private):
         "https://api.github.com/user/repos", headers=authorization, json=data
     )
     if response.status_code == 201:
-        print(HTML("<success>GitHub repository has been created</success>"), style=STYLE)
+        print(
+            HTML("<success>GitHub repository has been created</success>"), style=STYLE
+        )
     else:
         print(HTML("<error>Failed to create GitHub repository</error>"), style=STYLE)
         exit()
@@ -129,9 +133,11 @@ def initialize_project(name, username, message):
     check_result(result, "Failed to push files to remote")
 
     print(
-        HTML(f"<success>{name} has been successfully initialized. "
-        f"It is now live on <url>https://github.com/{username}/{name}</url></success>"),
-        style=STYLE
+        HTML(
+            f"<success>{name} has been successfully initialized. "
+            f"It is now live on <url>https://github.com/{username}/{name}</url></success>"
+        ),
+        style=STYLE,
     )
 
 
@@ -180,32 +186,36 @@ def main():
     token = load_token()
     if not token:
         token = prompt(
-            HTML(f"Please enter your GitHub access token\n{INPUT} "),
-            style=STYLE
+            HTML(f"Please enter your GitHub access token\n{INPUT} "), style=STYLE
         )
         while not check_user(token):
             token = prompt(
-                HTML(f"That token is invalid. Please enter your GitHub access token\n{INPUT} "),
-                style=STYLE
+                HTML(
+                    f"That token is invalid. Please enter your GitHub access token\n{INPUT} "
+                ),
+                style=STYLE,
             )
     username = check_user(token)
 
     # confirm token
     token_check = prompt(
-        HTML(f"You are registered as <highlight>{username}</highlight>. "
-        f"Do you want to change your GitHub access token? (y/n)\n{INPUT} "),
-        style=STYLE
+        HTML(
+            f"You are registered as <highlight>{username}</highlight>. "
+            f"Do you want to change your GitHub access token? (y/n)\n{INPUT} "
+        ),
+        style=STYLE,
     )
     if token_check in ["y", "yes"]:
         token = prompt(
-            HTML(f"Please enter your GitHub access token\n{INPUT} "),
-            style=STYLE
+            HTML(f"Please enter your GitHub access token\n{INPUT} "), style=STYLE
         )
         username = check_user(token)
         while not username:
             token = prompt(
-                HTML(f"That token is invalid. Please enter your GitHub access token\n{INPUT} "),
-                style=STYLE
+                HTML(
+                    f"That token is invalid. Please enter your GitHub access token\n{INPUT} "
+                ),
+                style=STYLE,
             )
             username = check_user(token)
 
@@ -214,24 +224,32 @@ def main():
     name = "".join(name.split())
     while not name:
         name = prompt(
-            HTML(f"Project name can not be empty. Please enter the project name\n{INPUT} "),
-            style=STYLE
+            HTML(
+                f"Project name can not be empty. Please enter the project name\n{INPUT} "
+            ),
+            style=STYLE,
         )
         name = "".join(name.split())
     description = None
     if mode != Mode.MINIMAL:
-        description = prompt(HTML(f"Please enter a project description\n{INPUT} "), style=STYLE)
-    private_check = prompt(HTML(f"Should the project be private? (y/n)\n{INPUT} "), style=STYLE)
+        description = prompt(
+            HTML(f"Please enter a project description\n{INPUT} "), style=STYLE
+        )
+    private_check = prompt(
+        HTML(f"Should the project be private? (y/n)\n{INPUT} "), style=STYLE
+    )
     create_project(token, name, description, private_check in ["y", "yes"])
 
     # add gitignores
     if mode != Mode.MINIMAL:
         gitignores = load_gitignores()
         keys = prompt(
-            HTML("Please enter the names of all languages or platforms "
-            f"you want to apply to the .gitignore (comma separated)\n{INPUT} "),
+            HTML(
+                "Please enter the names of all languages or platforms "
+                f"you want to apply to the .gitignore (comma separated)\n{INPUT} "
+            ),
             completer=WordCompleter(gitignores.keys()),
-            style=STYLE
+            style=STYLE,
         )
         keys = keys.replace(" ", "").split(",")
         add_gitignores(keys, gitignores)
@@ -239,10 +257,12 @@ def main():
     # add license
     if mode == Mode.EXTENDED:
         index = prompt(
-            HTML("Please enter a number corresponding to your license of choice: "
-            "[0 - MIT, 1 - Apache 2.0, 2 - GNU GPLv3, 3 - BSD 3-Clause, 4 - Unlicense]. "
-            f"For help choosing a license see <url>https://choosealicense.com</url>\n{INPUT} "),
-            style=STYLE
+            HTML(
+                "Please enter a number corresponding to your license of choice: "
+                "[0 - MIT, 1 - Apache 2.0, 2 - GNU GPLv3, 3 - BSD 3-Clause, 4 - Unlicense]. "
+                f"For help choosing a license see <url>https://choosealicense.com</url>\n{INPUT} "
+            ),
+            style=STYLE,
         )
         if index in ["0", "1", "2", "3", "4"]:
             add_license(int(index))
