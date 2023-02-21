@@ -129,7 +129,7 @@ def initialize_project(name, username, message):
     check_result(result, "Failed to push files to remote")
 
     print(
-        HTML("<success>name has been successfully initialized. "
+        HTML(f"<success>{name} has been successfully initialized. "
         f"It is now live on <url>https://github.com/{username}/{name}</url></success>"),
         style=STYLE
     )

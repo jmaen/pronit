@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="Pronit",
@@ -7,6 +7,7 @@ setup(
     author="Jannik Mänzer",
     url="https://github.com/jmaen/pronit",
     install_requires=["requests", "prompt_toolkit"],
+    packages=["pronit"],
     include_package_data=True,
     entry_points={
         "console_scripts": ["pronit=pronit.pronit:main"]
