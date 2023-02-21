@@ -13,7 +13,7 @@ Pronit will:
 - commit and push files with a custom commit message
 - open the project in Visual Studio Code
 
-![Demo](demo.png)
+![Demo](assets/demo.png)
 
 ## Installing
 1. Install Python 3.7 (or newer)
@@ -31,7 +31,7 @@ pipx install .
 pronit [-h] [-m | -e] [-c]
 ```
 
-- Without any options, Pronit will ask for name, description, visibility and languages / environments to include in the `.gitignore`.
+- Without any options, Pronit will ask for name, description, visibility and languages/platforms to include in the `.gitignore`.
 - `-h, --help`:
 Display usage info.
 - `-m, --minimal`:

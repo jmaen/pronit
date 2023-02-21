@@ -72,7 +72,7 @@ def create_project(token, name, description, private):
         "https://api.github.com/user/repos", headers=authorization, json=data
     )
     if response.status_code == 201:
-        print(HTML("<success>Github repository has been created</success>"), style=STYLE)
+        print(HTML("<success>GitHub repository has been created</success>"), style=STYLE)
     else:
         print(HTML("<error>Failed to create GitHub repository</error>"), style=STYLE)
         exit()
