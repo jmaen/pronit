@@ -8,6 +8,7 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.styles import Style
 import requests
 import subprocess
+import sys
 
 
 class Mode(Enum):
@@ -155,7 +156,7 @@ def check_result(result, message):
         exit()
 
 
-def main():
+def run():
     # parse arguments
     parser = argparse.ArgumentParser(
         prog="pronit", description="A tool that automates project initialization"
@@ -168,10 +169,16 @@ def main():
         "-e", "--extended", action="store_true", help="run Pronit in extended mode"
     )
     parser.add_argument(
+        "-t",
+        "--token",
+        action="store_true",
+        help="change your GitHub access token"
+    )
+    parser.add_argument(
         "-c",
         "--code",
         action="store_true",
-        help="open the project in Visual Studio Code",
+        help="open the project in Visual Studio Code"
     )
     args = vars(parser.parse_args())
 
@@ -184,7 +191,7 @@ def main():
 
     # get GitHub access token
     token = load_token()
-    if not token:
+    if not token or args["token"]:
         token = prompt(
             HTML(f"Please enter your GitHub access token\n{INPUT} "), style=STYLE
         )
@@ -197,27 +204,14 @@ def main():
             )
     username = check_user(token)
 
-    # confirm token
-    token_check = prompt(
+    # welcome
+    print(
         HTML(
             f"You are registered as <highlight>{username}</highlight>. "
-            f"Do you want to change your GitHub access token? (y/n)\n{INPUT} "
+            "If you want to change your GitHub access token, run pronit with '--token'."
         ),
         style=STYLE,
     )
-    if token_check in ["y", "yes"]:
-        token = prompt(
-            HTML(f"Please enter your GitHub access token\n{INPUT} "), style=STYLE
-        )
-        username = check_user(token)
-        while not username:
-            token = prompt(
-                HTML(
-                    f"That token is invalid. Please enter your GitHub access token\n{INPUT} "
-                ),
-                style=STYLE,
-            )
-            username = check_user(token)
 
     # create project
     name = prompt(HTML(f"Please enter the project name\n{INPUT} "), style=STYLE)
@@ -276,3 +270,10 @@ def main():
     # open Visual Studio Code
     if args["code"]:
         open_project()
+
+
+def main():
+    try:
+        run()
+    except KeyboardInterrupt:
+        sys.exit(0)
