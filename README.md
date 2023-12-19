@@ -28,7 +28,7 @@ pipx install .
 
 ## Usage
 ```
-pronit [-h] [-m | -e] [-c]
+pronit [-h] [-m | -e] [-t] [-c]
 ```
 
 - Without any options, Pronit will ask for name, description, visibility and languages/platforms to include in the `.gitignore`.
@@ -38,5 +38,7 @@ Display usage info.
 The bare minimum to get your project up and running as fast as possible. Only asks for name and visibility.
 - `-e, --extended`:
 Includes everything from the default option, plus selection of a license and custom commit message.
+- `-t, --token`:
+Change your GitHub access token.
 - `-c, --code`:
 Open the project in Visual Studio Code.
