@@ -202,6 +202,7 @@ def run():
                 ),
                 style=STYLE,
             )
+        save_token(token)
     username = check_user(token)
 
     # welcome
