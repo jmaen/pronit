@@ -174,12 +174,6 @@ def run():
         action="store_true",
         help="change your GitHub access token"
     )
-    parser.add_argument(
-        "-c",
-        "--code",
-        action="store_true",
-        help="open the project in Visual Studio Code"
-    )
     args = vars(parser.parse_args())
 
     # set mode
@@ -269,8 +263,13 @@ def run():
     initialize_project(name, username, message)
 
     # open Visual Studio Code
-    if args["code"]:
-        open_project()
+    if mode != Mode.MINIMAL:
+        open_check = prompt(
+            HTML(f"Do you want to open the project in Visual Studio Code? (y/n)\n{INPUT} "),
+            style=STYLE,
+        )
+        if open_check in ["y", "yes"]:
+            open_project()
 
 
 def main():
